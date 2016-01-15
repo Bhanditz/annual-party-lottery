@@ -34,11 +34,9 @@ $(function() {
     var current = 0;
 
     while(result.length < count) {
-      current = randomPick(total);
-      console.log(current);
+      current = randomPick(total);      
       if(!result.includes(current) && !blackList.includes(current)) {
         result.push(current);
-        console.log('added');
       }
     }
 
@@ -49,7 +47,11 @@ $(function() {
     candidates = pickCandidates(allPlayers.length, candidatesCount, winners)
                 .map(function(index) { return allPlayers[index] });
 
+    console.log("candidates: ", candidates);
+
     luckyOne = randomPick(candidates.length);
+
+    console.log("luckyOne: ", luckyOne, candidates[luckyOne]);
   }
 
   function refresh() {
@@ -66,7 +68,10 @@ $(function() {
     generateResult();
     refresh();
     $slotMachine.shuffle(5, function(result) {
-      $winner.text(candidates[result].name);
+      var winner = candidates[result];
+      console.log("Winner: ", winner);
+      winners.push(winner.index);
+      $winner.text(winner.name);
     });
   });
 
