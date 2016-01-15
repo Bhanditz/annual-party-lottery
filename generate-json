@@ -1,0 +1,9 @@
+#! /usr/bin/env node
+
+var fs = require('fs');
+var pathUtil = require('path');
+var rootPath = __dirname
+
+var fileLists = fs.readdirSync(pathUtil.resolve(rootPath, 'photos'));
+var list = fileLists.map((file) => ({ name: pathUtil.basename(file, pathUtil.extname(file)), photo: `photos/${file}` }));
+fs.writeFileSync('./list.json', JSON.stringify(list))
