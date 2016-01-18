@@ -13,6 +13,7 @@ var $roulette = null;
 var $winner = null;
 var $button = null;
 var $displayInfo = null;
+var $overlay = null;
 
 function loadState() {
   console.log('Load State...');
@@ -69,7 +70,7 @@ function listWinners() {
   return winners.map(function(index){ return allPlayers[index]; })
 }
 
-function resetState() {
+function resetWinners() {
   winners = [];
   saveState();
 }
@@ -157,14 +158,14 @@ function stop() {
 }
 
 function renderStopping() {
-  $button.attr('disabled', 'disabled');
+  $button.attr('disabled', 'disabled').removeClass('shake-rotate').addClass('shake-chunk');
 }
 
 function renderStop(winner) {
   console.log("Winner: ", winner);
   recordWinner(winner);
   $winner.text(winner.name).removeClass(TEXT_OUT_EFFECT).addClass(TEXT_IN_EFFECT);
-  $button.text('开始').attr('disabled', null).removeClass('shake-constant shake-rotate').addClass('shake-little');
+  $button.text('开始').attr('disabled', null).removeClass('shake-constant shake-chunk').addClass('shake-little');
 }
 
 function toggleButton() {
@@ -175,15 +176,25 @@ function toggleButton() {
   }
 }
 
-function warmUp() {
-  var $warmUp = $('.warm-up');
-  $warmUp.html('');
+function showOverlay(players) {
+  if(players == null) {
+    players = allPlayers;
+  }
 
-  allPlayers.forEach(function(item) {
-    $('<img>')
-    .attr('src', item.photo)
-    .appendTo($warmUp);
-  });  
+  $overlay.html('');
+
+  players.forEach(function(item) {
+    var $item = $('<div>').addClass('item').appendTo($overlay);
+    $('<img>').attr('src', item.photo).appendTo($item);
+    $('<span>').text(item.name).appendTo($item);
+  });
+}
+function hideOverlay() {
+  $overlay.html('');
+}
+
+function showWinners() {
+  showOverlay(listWinners());
 }
 
 $(function() {
@@ -191,6 +202,7 @@ $(function() {
   $winner = $('.winner');
   $button = $('.start-button');
   $displayInfo = $('.display-info');
+  $overlay = $('.overlay');
 
   $button.click(toggleButton);
   $(document).keypress(function(e) {
