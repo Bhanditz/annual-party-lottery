@@ -12,6 +12,7 @@ var luckyOne = 0;
 var $roulette = null;
 var $winner = null;
 var $button = null;
+var $displayInfo = null;
 
 function loadState() {
   console.log('Load State...');
@@ -39,11 +40,13 @@ function saveState() {
   console.log('Save state: ', data);
   var json = JSON.stringify(data);
   localStorage.setItem(STORAGE_KEY, json);
+  refreshDisplay();
 }
 function reload() {
   if(!loadState()) {
     reloadFromServer();
   }
+  refreshDisplay();
 }
 function reloadFromServer() {
   console.log('Load state from server...');
@@ -57,6 +60,9 @@ function reloadFromServer() {
     generateResult();
     refresh();
   });
+}
+function refreshDisplay() {
+  $displayInfo.text('Turn: ' + winners.length +' / Total: ' + allPlayers.length);
 }
 
 function listWinners() {
@@ -169,10 +175,22 @@ function toggleButton() {
   }
 }
 
+function warmUp() {
+  var $warmUp = $('.warm-up');
+  $warmUp.html('');
+
+  allPlayers.forEach(function(item) {
+    $('<img>')
+    .attr('src', item.photo)
+    .appendTo($warmUp);
+  });  
+}
+
 $(function() {
   $roulette = $('.roulette');
   $winner = $('.winner');
   $button = $('.start-button');
+  $displayInfo = $('.display-info');
 
   $button.click(toggleButton);
   $(document).keypress(function(e) {

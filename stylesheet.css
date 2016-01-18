@@ -55,3 +55,21 @@ button.start-button {
   font-size: 28px;
   text-shadow: 1px 1px 3px #999;
 }
+
+.display-info {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  color: #ccc;
+}
+
+.warm-up {
+
+}
+.warm-up img {
+  width: 300px;
+  height: 300px;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+}
