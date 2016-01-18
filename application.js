@@ -34,7 +34,7 @@ $(function() {
     var current = 0;
 
     while(result.length < count) {
-      current = randomPick(total);      
+      current = randomPick(total);
       if(!result.includes(current) && !blackList.includes(current)) {
         result.push(current);
       }
@@ -64,7 +64,7 @@ $(function() {
     $slotMachine = $roulette.slotMachine(defaultConfig)
   }
 
-  $('.start').click(function() {
+  $('.start-button').click(function() {
     generateResult();
     refresh();
     $slotMachine.shuffle(5, function(result) {
