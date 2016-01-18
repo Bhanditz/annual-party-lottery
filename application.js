@@ -1,7 +1,11 @@
 $(function() {
   var $roulette = $('.roulette');
-  var $slotMachine = null;
+  var slotMachine = null;
   var $winner = $('.winner');
+  var $button = $('.start-button');
+  var TEXT_IN_EFFECT = 'vanishIn';
+  var TEXT_OUT_EFFECT = 'puffOut';
+
 
   var allPlayers = [];
   var candidates = [];
@@ -12,7 +16,11 @@ $(function() {
   var defaultConfig = {
 		active	: 0,
 		delay	: 500,
-    randomize: function() { return luckyOne; }
+    randomize: function() { return luckyOne; },
+    complete: function(result) {
+      var winner = candidates[result];
+      renderStop(winner);
+    }
   };
 
   function reload() {
@@ -61,18 +69,54 @@ $(function() {
       .attr('src', item.photo)
       .appendTo($roulette);
     });
-    $slotMachine = $roulette.slotMachine(defaultConfig)
+    slotMachine = $roulette.slotMachine(defaultConfig);
   }
 
-  $('.start-button').click(function() {
+  function start() {
+    $button.attr('disabled', 'disabled');
+    setTimeout(function() { $button.attr('disabled', null); }, 500);
     generateResult();
     refresh();
-    $slotMachine.shuffle(5, function(result) {
-      var winner = candidates[result];
-      console.log("Winner: ", winner);
-      winners.push(winner.index);
-      $winner.text(winner.name);
-    });
+    slotMachine.shuffle();
+    rednerStart();
+  }
+
+  function rednerStart() {
+    $button.text('停止').addClass('shake-constant shake-rotate');
+    $winner.removeClass(TEXT_IN_EFFECT).addClass(TEXT_OUT_EFFECT);
+  }
+
+  function stop() {
+    slotMachine.stop();
+    renderStopping();
+  }
+
+  function renderStopping() {
+    $button.attr('disabled', 'disabled');
+  }
+
+  function renderStop(winner) {
+    console.log("Winner: ", winner);
+    winners.push(winner.index);
+    $winner.text(winner.name).removeClass(TEXT_OUT_EFFECT).addClass(TEXT_IN_EFFECT);
+    $button.text('开始').attr('disabled', null).removeClass('shake-constant shake-rotate').addClass('shake-little');
+  }
+
+  function toggleButton() {
+    if(slotMachine.running) {
+      stop();
+    } else {
+      start();
+    }
+  }
+
+  $button.click(toggleButton);
+  $(document).keypress(function(e) {
+    console.log(e);
+    if([13, 32].includes(e.which)) {
+      e.preventDefault();
+      toggleButton();
+    }
   });
 
   reload();
