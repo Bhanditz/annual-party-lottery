@@ -59,6 +59,10 @@ function reloadFromServer() {
   });
 }
 
+function listWinners() {
+  return winners.map(function(index){ return allPlayers[index]; })
+}
+
 function resetState() {
   winners = [];
   saveState();
@@ -74,7 +78,7 @@ function isWinner(index) {
 }
 
 function recordWinner(winner) {
-  winners.push(winner);
+  winners.push(winner.index);
   saveState();
 }
 
@@ -172,7 +176,6 @@ $(function() {
 
   $button.click(toggleButton);
   $(document).keypress(function(e) {
-    console.log(e);
     if([13, 32].includes(e.which)) {
       e.preventDefault();
       toggleButton();
