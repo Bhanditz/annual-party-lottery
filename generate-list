@@ -1,0 +1,16 @@
+#! /usr/bin/env node
+
+var fs = require('fs');
+var pathUtil = require('path');
+var rootPath = __dirname
+
+var photosPath = process.argv[2] || 'photos';
+var relativePath = pathUtil.relative(rootPath, photosPath);
+
+console.log(`Load photos from ${photosPath}`);
+console.log(`Relative path is ${relativePath}`);
+
+var fileLists = fs.readdirSync(pathUtil.resolve(rootPath, photosPath));
+var list = fileLists.map((file) => ({ name: pathUtil.basename(file, pathUtil.extname(file)), photo: `${relativePath}/${file}` }));
+fs.writeFileSync('./list.json', JSON.stringify(list))
+console.log('Data is written to list.json');
